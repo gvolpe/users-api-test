@@ -3,7 +3,7 @@ package users.domain
 import java.time.OffsetDateTime
 
 import cats.kernel.Eq
-import cats.implicits._
+import cats.syntax.eq._
 import com.softwaremill.quicklens._
 
 final case class User(

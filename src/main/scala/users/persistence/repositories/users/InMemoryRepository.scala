@@ -1,16 +1,14 @@
 package users.persistence.repositories.users
 
-import cats.implicits._
-
+import cats.syntax.eq._
 import users.domain._
 import users.persistence.repositories._
 
-import scala.collection.concurrent.TrieMap
+import scala.collection.mutable
 import scala.concurrent.Future
 
 private[users] object InMemoryRepository {
-  private final val UserMap: TrieMap[User.Id, User] =
-    TrieMap.empty
+  private final var UserMap = mutable.HashMap.empty[User.Id, User]
 }
 
 private[users] class InMemoryRepository extends UserRepository {
@@ -18,7 +16,7 @@ private[users] class InMemoryRepository extends UserRepository {
 
   def insert(user: User): Future[Done] =
     Future.successful {
-      UserMap + (user.id → user)
+      UserMap += (user.id → user)
       Done
     }
 

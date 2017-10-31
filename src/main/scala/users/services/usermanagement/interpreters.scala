@@ -4,7 +4,7 @@ import java.util.UUID
 import java.time.OffsetDateTime
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.instances.future._
 import users.config._
 import users.domain._
 import users.persistence.repositories._
