@@ -2,10 +2,24 @@ package users.http
 
 import java.time.OffsetDateTime
 
+import cats.effect.IO
+import io.circe.generic.auto._
 import io.circe.{Encoder, Json}
+import org.http4s.EntityDecoder
+import org.http4s.circe._
 import users.domain.{EmailAddress, Password, User, UserName}
 
 package object endpoints {
+
+  val ApiVersion = "v1"
+
+  object model {
+    case class UserSignUp(username: String, email: String, password: Option[String])
+    case class UserPatch(email: Option[String], password: Option[String])
+
+    implicit def userSignUpDecoder: EntityDecoder[IO, UserSignUp] = jsonOf[IO, UserSignUp]
+    implicit def userPatchDecoder: EntityDecoder[IO, UserPatch] = jsonOf[IO, UserPatch]
+  }
 
   implicit val userIdEncoder: Encoder[User.Id] = Encoder.instance {
     case User.Id(id) => Json.fromString(id)
