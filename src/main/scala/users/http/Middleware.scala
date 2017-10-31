@@ -15,8 +15,8 @@ object Middleware {
 }
 
 /**
-  * The purpose of this class is to wrap the existent [[users.services.usermanagement.Algebra]] that models
-  * all the methods to the type F[Error Either A] and just use F[A] since where F is any [[cats.effect.Effect]].
+  * The purpose of this class is to wrap the existent [[users.services.usermanagement.Algebra]], where all the methods
+  * are modelled with the type F[Error Either A], and just use F[A] where F is any [[cats.effect.Effect]].
   *
   * Preferably, I'd change the type of the algebra's methods to F[A] : Effect.
   * */
