@@ -55,6 +55,9 @@ users-api
 
 Requires Authentication (/v1/signin)
 
+##### Retrieve all users (including Password and Metadata)
+* GET /v1/admin/users
+
 ##### Delete user by id:
 * DELETE /v1/admin/users/**{id}**
 

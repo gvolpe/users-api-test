@@ -1,6 +1,7 @@
 package users.http.endpoints
 
 import cats.effect._
+import io.circe.Encoder
 import io.circe.generic.auto._
 import org.http4s._
 import org.http4s.client.dsl.Http4sClientDsl
@@ -12,6 +13,11 @@ import users.http.endpoints.model.{UserPatch, UserSignUp}
 class BaseUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[IO] {
 
   import IOHttpResponseHandler._
+
+  implicit val baseUserEncoder: Encoder[User] =
+    Encoder.forProduct3("id", "username", "email")(u =>
+      (u.id, u.userName, u.emailAddress)
+    )
 
   val service: HttpService[IO] = HttpService[IO] {
     case req @ POST -> Root / ApiVersion / "signup" =>

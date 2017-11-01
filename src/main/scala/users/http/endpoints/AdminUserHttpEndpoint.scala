@@ -65,6 +65,8 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
   import IOHttpResponseHandler._
 
   val authedService: AuthedService[IO, UserLogin] = AuthedService {
+    case GET -> Root / ApiVersion / "admin" /  "users" as _ =>
+      middleware.all().handle
     case DELETE -> Root / ApiVersion / "admin" /  "users" / id as _ =>
       middleware.delete(User.Id(id)).handle
     case POST -> Root / ApiVersion / "admin" /  "users" / id / "block" as _ =>
