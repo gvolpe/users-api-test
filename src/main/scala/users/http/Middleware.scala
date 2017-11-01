@@ -1,15 +1,16 @@
 package users.http
 
 import cats.effect.Effect
-import users.ApplicationContext
 import users.domain._
+import users.services.UserManagement
 import users.services.usermanagement.Error
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 object Middleware {
-  def apply[F[_] : Effect]: Middleware[F] = new Middleware[F]()
+  def apply[F[_] : Effect](underlyingUserService: UserManagement[Future[?]]): Middleware[F] =
+    new Middleware[F](underlyingUserService)
 
   implicit class IOFutureInterop[A](futureOfEither: Future[Either[Error, A]]) {
     def toF[F[_] : Effect](implicit timeOut: FiniteDuration): F[A] =
@@ -17,6 +18,7 @@ object Middleware {
         cb(Await.result(futureOfEither, timeOut))
       }
   }
+
 }
 
 /**
@@ -24,11 +26,10 @@ object Middleware {
   * are modelled with the type F[Error Either A], and just use F[A] where F is any [[cats.effect.Effect]].
   *
   * Preferably, I'd instantiate [[users.services.UserManagement]] as F[_] : Effect and write an interpreter for F.
-  * */
-class Middleware[F[_] : Effect] {
-  import Middleware._
+  **/
+class Middleware[F[_] : Effect](underlyingUserService: UserManagement[Future[?]]) {
 
-  private val underlyingUserService = ApplicationContext.application.services.userManagement
+  import Middleware._
 
   implicit val serviceTimeOut: FiniteDuration = 2.seconds
 

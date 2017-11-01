@@ -19,6 +19,8 @@ import users.http.endpoints.model.UserLogin
 
 class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[IO] {
 
+  private val adminUser = UserLogin("gvolpe", "") // Hardcoded admin user
+
   private def retrieveUser: Kleisli[IO, String, UserLogin] =
     Kleisli(username => IO(UserLogin(username, "")))
 
@@ -43,8 +45,8 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
   // TODO: Retrieve user from real admin db...
   private def verifyLogin(userLogin: UserLogin): IO[String Either UserLogin] =
     userLogin match {
-      case user @ UserLogin("gvolpe", _)  => IO(Right(user))
-      case _                              => IO(Left("User must be admin"))
+      case user @ UserLogin(adminUser.username, _)  => IO(Right(user))
+      case _                                        => IO(Left("User must be admin"))
     }
 
   private def login: Kleisli[IO, Request[IO], Response[IO]] = Kleisli({ request =>

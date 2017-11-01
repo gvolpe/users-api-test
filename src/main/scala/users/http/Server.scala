@@ -7,11 +7,13 @@ import org.http4s.HttpService
 import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.implicits._
 import org.http4s.util.StreamApp
+import users.ApplicationContext
 import users.http.endpoints.{AdminUserHttpEndpoint, BaseUserHttpEndpoint}
 
 object Server extends StreamApp[IO] {
 
-  private val middleware: Middleware[IO] = Middleware[IO]
+  private val underlyingUserService = ApplicationContext.application.services.userManagement
+  private val middleware            = Middleware[IO](underlyingUserService)
 
   private val baseUserHttpEndpoint  = new BaseUserHttpEndpoint(middleware).service
   private val adminUserHttpEndpoint = new AdminUserHttpEndpoint(middleware).service

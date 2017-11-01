@@ -5,7 +5,7 @@ import users.main._
 
 object ApplicationContext {
 
-  val config = ApplicationConfig(
+  private val config = ApplicationConfig(
     executors = ExecutorsConfig(
       services = ExecutorsConfig.ServicesConfig(
         parallellism = 4

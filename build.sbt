@@ -31,5 +31,9 @@ libraryDependencies ++= Seq(
   "io.circe"          %% "circe-generic"                % CirceVersion,
   "org.reactormonk"   %% "cryptobits"                   % "1.1",
 
+  "ch.qos.logback"    %  "logback-classic"              % "1.2.1",
+  "org.scalatest"     %% "scalatest"                    % "3.0.3"   % Test,
+  "org.scalacheck"    %% "scalacheck"                   % "1.13.4"  % Test,
+
   compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 )

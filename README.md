@@ -68,4 +68,4 @@ Requires Authentication (/v1/signin)
 
 For the sake of simplicity in this example the user with username = "gvolpe" and password = "" will be the only one authenticated as an administrator. Any other user will not be authorized to perform requests that require authentication.
 
-Start the server by executing `sbt run`. The server will run at [http://localhost:8080](http://localhost:8080).
+Start the server by executing `sbt run`. The server will be listening at [http://localhost:8080](http://localhost:8080).
