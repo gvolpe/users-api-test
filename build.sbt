@@ -29,6 +29,7 @@ libraryDependencies ++= Seq(
   "org.http4s"        %% "http4s-circe"                 % Http4sVersion,
   "io.circe"          %% "circe-core"                   % CirceVersion,
   "io.circe"          %% "circe-generic"                % CirceVersion,
+  "org.reactormonk"   %% "cryptobits"                   % "1.1",
 
   compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 )

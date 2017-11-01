@@ -1,19 +1,28 @@
 package users.http
 
 import cats.effect.IO
+import cats.syntax.semigroupk._
 import fs2.Stream
+import org.http4s.HttpService
 import org.http4s.server.blaze.BlazeBuilder
+import org.http4s.implicits._
 import org.http4s.util.StreamApp
-import users.http.endpoints.BaseUserHttpEndpoint
+import users.http.endpoints.{AdminUserHttpEndpoint, BaseUserHttpEndpoint}
 
 object Server extends StreamApp[IO] {
 
-  val middleware: Middleware[IO] = Middleware[IO]
+  private val middleware: Middleware[IO] = Middleware[IO]
+
+  private val baseUserHttpEndpoint  = new BaseUserHttpEndpoint(middleware).service
+  private val adminUserHttpEndpoint = new AdminUserHttpEndpoint(middleware).service
+
+  private val httpServices: HttpService[IO] =
+    baseUserHttpEndpoint <+> adminUserHttpEndpoint
 
   override def stream(args: List[String], requestShutdown: IO[Unit]): Stream[IO, StreamApp.ExitCode] =
     BlazeBuilder[IO]
       .bindHttp(sys.env.getOrElse("PORT", "8080").toInt, "0.0.0.0")
-      .mountService(new BaseUserHttpEndpoint(middleware).service)
+      .mountService(httpServices)
       .serve
 
 }

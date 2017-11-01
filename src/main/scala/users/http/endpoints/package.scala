@@ -16,9 +16,11 @@ package object endpoints {
   object model {
     case class UserSignUp(username: String, email: String, password: Option[String])
     case class UserPatch(email: Option[String], password: Option[String])
+    case class UserLogin(username: String, password: String)
 
     implicit def userSignUpDecoder: EntityDecoder[IO, UserSignUp] = jsonOf[IO, UserSignUp]
     implicit def userPatchDecoder: EntityDecoder[IO, UserPatch] = jsonOf[IO, UserPatch]
+    implicit def userLoginDecoder: EntityDecoder[IO, UserLogin] = jsonOf[IO, UserLogin]
   }
 
   implicit val userIdEncoder: Encoder[User.Id] = Encoder.instance {
