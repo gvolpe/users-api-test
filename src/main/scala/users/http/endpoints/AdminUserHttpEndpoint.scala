@@ -72,7 +72,7 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
   }
 
   val loginService : HttpService[IO] = HttpService[IO] {
-    case req @ POST -> Root / ApiVersion / "login" =>
+    case req @ POST -> Root / ApiVersion / "signin" =>
       login.run(req)
   }
 
