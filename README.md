@@ -47,7 +47,7 @@ users-api
 ```json
 {
   "username": "gvolpe",
-  "password": "123456" // optional
+  "password": "123456"
 }
 ```
 

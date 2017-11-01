@@ -23,7 +23,7 @@ object Middleware {
   * The purpose of this class is to wrap the existent [[users.services.usermanagement.Algebra]], where all the methods
   * are modelled with the type F[Error Either A], and just use F[A] where F is any [[cats.effect.Effect]].
   *
-  * Preferably, I'd change the type of the algebra's methods to F[A] : Effect.
+  * Preferably, I'd instantiate [[users.services.UserManagement]] as F[_] : Effect and write an interpreter for F.
   * */
 class Middleware[F[_] : Effect] {
   import Middleware._
