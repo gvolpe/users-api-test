@@ -3,7 +3,7 @@ users-api
 
 ### Base User Actions
 
-Sign Up:
+##### Sign Up:
 * POST /v1/signup
 
 ```json
@@ -14,13 +14,34 @@ Sign Up:
 }
 ```
 
-Retrieve all users:
+##### Retrieve all users:
 * GET /v1/users
 
-Retrieve user by id:
+##### Retrieve user by id:
 * GET /v1/users/**{id}**
 
-Login:
+##### Update user's email
+* PATCH /v1/users/**{id}**
+
+```json
+{
+  "email": "gvolpe@gmail.com"
+}
+```
+
+##### Update user's password
+* PATCH /v1/users/**{id}**
+
+```json
+{
+  "password: "gvolpe@gmail.com"
+}
+```
+
+##### Forgot Password
+* POST /v1/users/**{id}**/forgotpassword
+
+##### Signin:
 * POST /v1/signin
 
 ```json
@@ -30,15 +51,17 @@ Login:
 }
 ```
 
-### Admin User Actions (Requires Authentication)
+### Admin User Actions
 
-Delete user by id:
+Requires Authentication (/v1/signin)
+
+##### Delete user by id:
 * DELETE /v1/admin/users/**{id}**
 
-Block user by id:
+##### Block user by id:
 * POST /v1/admin/users/**{id}**/block
 
-Unblock user by id:
+##### Unblock user by id:
 * POST /v1/admin/users/**{id}**/unblock
 
 ### Notes
