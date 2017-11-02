@@ -64,14 +64,14 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
 
   import IOHttpResponseHandler._
 
-  val authedService: AuthedService[IO, UserLogin] = AuthedService {
-    case GET -> Root / ApiVersion / "admin" /  "users" as _ =>
+  private val authedService: AuthedService[IO, UserLogin] = AuthedService {
+    case GET -> Root / "users" as _ =>
       middleware.all().handle
-    case DELETE -> Root / ApiVersion / "admin" /  "users" / id as _ =>
+    case DELETE -> Root / "users" / id as _ =>
       middleware.delete(User.Id(id)).handle
-    case POST -> Root / ApiVersion / "admin" /  "users" / id / "block" as _ =>
+    case POST -> Root / "users" / id / "block" as _ =>
       middleware.block(User.Id(id)).handle
-    case POST -> Root / ApiVersion / "admin" /  "users" / id / "unblock" as _ =>
+    case POST -> Root /  "users" / id / "unblock" as _ =>
       middleware.unblock(User.Id(id)).handle
   }
 
@@ -80,6 +80,6 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
       login.run(req)
   }
 
-  val service: HttpService[IO] = loginService <+> authMiddleware(authedService)
+  val service: HttpService[IO] = authMiddleware(authedService)
 
 }

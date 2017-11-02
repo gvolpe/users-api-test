@@ -17,7 +17,7 @@ object IOHttpResponseHandler {
   implicit class IOHandlerOps[A](io: IO[A]) {
 
     private def baseHandler(successfulResponse: EntityResponseGenerator[IO])(implicit encoder: Encoder[A]): IO[Response[IO]] =
-      io.attempt.unsafeRunSync() match {
+      io.attempt flatMap {
         case Right(users)               => successfulResponse.apply(users.asJson)
         case Left(e: TimeoutException)  => InternalServerError(e.getMessage)
         case Left(e: UserError)         => e match {

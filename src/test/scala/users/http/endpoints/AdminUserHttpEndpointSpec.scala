@@ -9,7 +9,10 @@ class AdminUserHttpEndpointSpec extends HttpEndpointSpec with FlatSpecLike with 
 
   behavior of "AdminUserHttpEndpoint"
 
-  val httpService = new AdminUserHttpEndpoint(middleware).service
+  val adminHttpEndpoint = new AdminUserHttpEndpoint(middleware)
+
+  val loginService  = adminHttpEndpoint.loginService
+  val httpService   = adminHttpEndpoint.service
 
   it should "should NOT authorize access to a base user" in {
     val request = Request[IO](method = Method.DELETE, uri = Uri(path = s"/$ApiVersion/admin/users/123"))
@@ -32,7 +35,7 @@ class AdminUserHttpEndpointSpec extends HttpEndpointSpec with FlatSpecLike with 
     val request = Request[IO](method = Method.POST, uri = Uri(path = s"/$ApiVersion/signin"))
       .withBody[String](body).unsafeRunSync()
 
-    val task = httpService(request).value.unsafeRunSync()
+    val task = loginService(request).value.unsafeRunSync()
     task.foreach { response =>
       val cookieHeader = response.headers.filter(_.value.contains("authcookie"))
       val cookieValue = cookieHeader.map(_.value).toList.headOption.getOrElse("").split('=')(1)
