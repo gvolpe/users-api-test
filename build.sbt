@@ -1,8 +1,8 @@
 name := "users"
 version := "1.0.0"
 
-lazy val Http4sVersion  = "0.18.0-M4"
-lazy val CirceVersion   = "0.9.0-M1"
+lazy val Http4sVersion  = "0.18.0-M5"
+lazy val CirceVersion   = "0.9.0-M2"
 
 scalaVersion := "2.12.3"
 scalacOptions ++= Seq(
@@ -20,8 +20,8 @@ resolvers +=
 
 libraryDependencies ++= Seq(
   "com.softwaremill.quicklens"    %% "quicklens"      % "1.4.11",
-  "org.typelevel"                 %% "cats-core"      % "1.0.0-MF",
-  "org.typelevel"                 %% "cats-effect"    % "0.4",
+  "org.typelevel"                 %% "cats-core"      % "1.0.0-RC1",
+  "org.typelevel"                 %% "cats-effect"    % "0.5",
 
   "org.http4s"        %% "http4s-blaze-server"          % Http4sVersion,
   "org.http4s"        %% "http4s-blaze-client"          % Http4sVersion,

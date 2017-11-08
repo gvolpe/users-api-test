@@ -24,7 +24,7 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
   private def retrieveUser: Kleisli[IO, String, UserLogin] =
     Kleisli(username => IO(UserLogin(username, "")))
 
-  private val onFailure: AuthedService[IO, String] = Kleisli(req => OptionT.liftF(Forbidden(req.authInfo)))
+  private val onFailure: AuthedService[String, IO] = Kleisli(req => OptionT.liftF(Forbidden(req.authInfo)))
 
   private val authUser: Kleisli[IO, Request[IO], Either[String, UserLogin]] = Kleisli({ request =>
     val message = for {
@@ -64,7 +64,7 @@ class AdminUserHttpEndpoint(middleware: Middleware[IO]) extends Http4sClientDsl[
 
   import IOHttpResponseHandler._
 
-  private val authedService: AuthedService[IO, UserLogin] = AuthedService {
+  private val authedService: AuthedService[UserLogin, IO] = AuthedService {
     case GET -> Root / "users" as _ =>
       middleware.all().handle
     case DELETE -> Root / "users" / id as _ =>
