@@ -5,14 +5,18 @@ import io.circe.Encoder
 import io.circe.syntax._
 import org.http4s._
 import org.http4s.circe._
-import org.http4s.dsl.io._
+import org.http4s.dsl.Http4sDsl
 import users.services.usermanagement.Error.{Active, Blocked, Deleted, Exists, NotFound => UserNotFound, System => UserSystem}
 
 import scala.concurrent.TimeoutException
 
-object IOHttpResponseHandler {
+object HttpEndpoint {
+  def apply[F[_] : Effect]: HttpEndpoint[F] = new HttpEndpoint[F]()
+}
 
-  val usersErrorHandler: PartialFunction[Throwable, IO[Response[IO]]] = {
+class HttpEndpoint[F[_] : Effect] extends Http4sDsl[F] {
+
+  val usersErrorHandler: PartialFunction[Throwable, F[Response[F]]] = {
     case e: TimeoutException  => InternalServerError(e.getMessage)
     case Exists               => Conflict()
     case UserNotFound         => NotFound()
@@ -22,14 +26,15 @@ object IOHttpResponseHandler {
     case UserSystem(t)        => InternalServerError(t.getMessage)
   }
 
-  implicit class IOHandlerOps[A](io: IO[A]) {
+  implicit class EffectHandlerOps[A](effect: F[A]) {
     import cats.syntax.applicativeError._
+    import cats.syntax.flatMap._
 
-    def handle(implicit encoder: Encoder[A]): IO[Response[IO]] =
-      io.flatMap(x => Ok(x.asJson)).recoverWith(usersErrorHandler)
+    def handle(implicit encoder: Encoder[A]): F[Response[F]] =
+      effect.>>=(x => Ok(x.asJson)).recoverWith(usersErrorHandler)
 
-    def handleCreation(implicit encoder: Encoder[A]): IO[Response[IO]] =
-      io.flatMap(x => Created(x.asJson)).recoverWith(usersErrorHandler)
+    def handleCreation(implicit encoder: Encoder[A]): F[Response[F]] =
+      effect.>>=(x => Created(x.asJson)).recoverWith(usersErrorHandler)
   }
 
 }
